@@ -13,17 +13,36 @@ function App() {
       completed: false,
       createdAt: new Date(),
     };
-    setTasks([ ...tasks, newTask ]);
+    setTasks([...tasks, newTask]);
   };
 
   const toggleTask = (id) => {
-    setTasks(tasks.map(t => 
-      t.id === id ? { ...t, completed: !t.completed } : t
+    setTasks(tasks.map(task => 
+      task.id === id ? { ...task, completed: !task.completed } : task  
     ));
   };
 
   const removeTask = (id) => {
-    setTasks(tasks.filter(t => t.id !== id));
+    setTasks(tasks.filter(task => task.id !== id));   
+  };
+
+  const clearCompletedTasks = () => {
+    console.log("Проверка клика Clear");
+    setTasks(tasks.filter(task => !task.completed));
+  };
+
+  const [filter, setFilter] = useState('all');
+
+
+  let displayTasks = tasks;
+  if (filter === 'active') {
+    displayTasks = tasks.filter(task => !task.completed);
+  } else if (filter === 'completed') {
+    displayTasks = tasks.filter(task => task.completed);
+  }
+
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
   };
 
   return (
@@ -33,8 +52,17 @@ function App() {
         <NewTaskForm addTask={addTask} />
       </header>
       <section className="main">
-        <TaskList tasks={tasks} toggleTask={toggleTask} removeTask={removeTask} />
-        <Footer tasks={tasks} />
+        <TaskList 
+          tasks={displayTasks} 
+          toggleTask={toggleTask}
+          removeTask={removeTask}
+        />
+        <Footer 
+          tasks={tasks} 
+          currentFilter={filter}
+          onFilterChange={handleFilterChange}
+          onClearCompleted={clearCompletedTasks}
+        />
       </section>
     </section>
   );

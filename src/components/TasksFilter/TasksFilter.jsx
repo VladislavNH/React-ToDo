@@ -1,16 +1,31 @@
 import React from 'react';
 
-function TasksFilter() {
+function TasksFilter({ currentFilter, onFilterChange }) {
   return (
-    <ul className="filters" style={{ listStyle: 'none', padding: 0, display: 'inline-block', marginLeft: '20px' }}>
-      <li style={{ display: 'inline', marginRight: '10px' }}>
-        <button className="selected">All</button>
+    <ul className="filters">
+      <li>
+        <button 
+          className={currentFilter === 'all' ? 'selected' : ''}
+          onClick={() => onFilterChange('all')}
+        >
+          All
+        </button>
       </li>
-      <li style={{ display: 'inline', marginRight: '10px' }}>
-        <button>Active</button>
+      <li>
+        <button 
+          className={currentFilter === 'active' ? 'selected' : ''}
+          onClick={() => onFilterChange('active')}
+        >
+          Active
+        </button>
       </li>
-      <li style={{ display: 'inline' }}>
-        <button>Completed</button>
+      <li>
+        <button 
+          className={currentFilter === 'completed' ? 'selected' : ''}
+          onClick={() => onFilterChange('completed')}
+        >
+          Completed
+        </button>
       </li>
     </ul>
   );
