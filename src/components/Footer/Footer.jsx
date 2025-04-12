@@ -1,21 +1,35 @@
-import React from 'react';
-import TasksFilter from '../TasksFilter/TasksFilter';
+import React from 'react'
+import PropTypes from 'prop-types'
+import './Footer.css'
 
-function Footer({ tasks, currentFilter, onFilterChange, onClearCompleted }) {
-  const itemsLeft = tasks.filter(task => !task.completed).length;
+import TasksFilter from '../TasksFilter/TasksFilter'
 
+function Footer({ itemsLeft, onRenderModeChange, renderMode, renderOptions, onDeleteAllComplete }) {
   return (
     <footer className="footer">
-      <span className="todo-count">{itemsLeft} items left</span>
-      <TasksFilter 
-        currentFilter={currentFilter}
-        onFilterChange={onFilterChange}
-      />
-      <button className="clear-completed" onClick={onClearCompleted}>
+      <span className="todo-count">
+        {itemsLeft}
+        items left
+      </span>
+      <TasksFilter onRenderModeChange={onRenderModeChange} renderMode={renderMode} renderOptions={renderOptions} />
+      <button className="clear-completed" onClick={() => onDeleteAllComplete()} type="button">
         Clear completed
       </button>
     </footer>
-  );
+  )
 }
 
-export default Footer;
+export default Footer
+
+Footer.propTypes = {
+  itemsLeft: PropTypes.number.isRequired,
+  renderMode: PropTypes.oneOf(['All', 'Active', 'Completed']),
+  renderOptions: PropTypes.arrayOf(PropTypes.string),
+  onRenderModeChange: PropTypes.func.isRequired,
+  onDeleteAllComplete: PropTypes.func.isRequired,
+}
+
+Footer.defaultProps = {
+  renderMode: 'All',
+  renderOptions: ['All', 'Active', 'Completed'],
+}

@@ -1,30 +1,74 @@
-import React from 'react';
-import { formatDistanceToNow } from 'date-fns';
+import React from 'react'
+import PropTypes from 'prop-types'
+import formatDistanceToNow from 'date-fns/formatDistanceToNow'
+import './Task.css'
 
+export default class Task extends React.Component {
+  clickHandler = (e) => {
+    const { onEditTask, id, description } = this.props
+    onEditTask(id, description)
+    setTimeout(() => {
+      const listItem = e.target.closest('li')
+      if (listItem) {
+        const editElem = listItem.querySelector('.edit')
+        if (editElem) {
+          editElem.focus()
+        }
+      }
+    }, 50)
+  }
 
-function Task({ task, toggleTask, removeTask }) {
-  const timeAgo = formatDistanceToNow(task.createdAt, { addSuffix: true });
+  render() {
+    const {
+      description,
+      created,
+      id,
+      completed,
+      onDeleteTask,
+      onCompleteTask,
+    } = this.props
 
-  return (
-    <li className={task.completed ? 'completed' : ''}>
-      <div className="view" style={{ display: 'flex', alignItems: 'center', padding: '10px', borderBottom: '1px solid #eee' }}>
-        <input 
-          className="toggle" 
-          type="checkbox" 
-          checked={task.completed} 
-          onChange={() => toggleTask(task.id)} 
+    const checkboxId = `checkbox-${id}`
+
+    return (
+      <div className="view">
+        <input
+          className="toggle"
+          type="checkbox"
+          checked={!!completed}
+          onChange={() => onCompleteTask(id)}
+          id={checkboxId}
+          aria-label="Mark task as completed"
         />
-        <label style={{ flexGrow: 1, marginLeft: '10px' }}>
-          <span className="description">{task.text}</span>
-          <span className="created" style={{ marginLeft: '10px', fontSize: '12px', color: '#888' }}>
-            created {timeAgo}
-          </span>
+
+        <label htmlFor={checkboxId} className="description-label">
+          <span className="description">{description}</span>
+          <span className="created">{formatDistanceToNow(created)}</span>
         </label>
-        <button className="icon icon-edit" style={{ marginRight: '5px' }}></button>
-        <button className="icon icon-destroy" onClick={() => removeTask(task.id)}></button>
+
+        <button
+          className="icon icon-edit"
+          onClick={this.clickHandler}
+          type="button"
+          aria-label="Edit task"
+        />
+
+        <button
+          className="icon icon-destroy"
+          onClick={() => onDeleteTask(id)}
+          type="button"
+          aria-label="Delete task"
+        />
       </div>
-    </li>
-  );
+    )
+  }
 }
 
-export default Task;
+Task.propTypes = {
+  description: PropTypes.string.isRequired,
+  created: PropTypes.instanceOf(Date).isRequired,
+  id: PropTypes.number.isRequired,
+  completed: PropTypes.bool.isRequired,
+  onDeleteTask: PropTypes.func.isRequired,
+  onCompleteTask: PropTypes.func.isRequired,
+}
