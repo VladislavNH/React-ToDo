@@ -1,5 +1,5 @@
 import React from 'react';
-import './index.css';
+import './TodoApp.css';
 
 import NewTaskForm from './components/NewTaskForm/NewTasksFrom';
 import TaskList from './components/TaskList/TaskList';
