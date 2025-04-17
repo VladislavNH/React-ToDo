@@ -9,7 +9,7 @@ export default class TasksFilter extends React.Component {
     const { renderOptions, renderMode, onRenderModeChange } = this.props
 
     const items = renderOptions.map((option) => (
-      <li key={this.key++}>
+      <li key={this.key}>
         <button
           className={renderMode === option ? 'selected' : ''}
           onClick={() => onRenderModeChange(option)}
